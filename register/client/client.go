@@ -50,7 +50,7 @@ func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, 
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	return register.NewRegistrationClient(conn), nil
 }
 
