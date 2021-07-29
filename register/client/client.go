@@ -19,6 +19,7 @@ package client
 import (
 	"context"
 	"crypto/tls"
+	"fmt"
 	"time"
 
 	"github.com/netw-device-driver/ndd-grpc/ndd"
@@ -34,6 +35,7 @@ const (
 
 func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, error) {
 	var opts []grpc.DialOption
+	fmt.Printf("grpc client config: %v", c)
 	if c.Insecure {
 		opts = append(opts, grpc.WithInsecure())
 	} else {
@@ -50,7 +52,7 @@ func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, 
 	if err != nil {
 		return nil, err
 	}
-	//defer conn.Close()
+	defer conn.Close()
 	return register.NewRegistrationClient(conn), nil
 }
 
