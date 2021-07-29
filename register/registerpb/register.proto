@@ -29,7 +29,7 @@ service Registration {
     string          deviceType             = 1;
     string          MatchString            = 2;
     repeated string Subscriptions          = 3;
-    repeated string ExcpetionPaths         = 4;
+    repeated string ExceptionPaths         = 4;
     repeated string ExplicitExceptionPaths = 5;
   }
 
