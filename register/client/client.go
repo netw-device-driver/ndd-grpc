@@ -35,7 +35,7 @@ const (
 
 func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, error) {
 	var opts []grpc.DialOption
-	fmt.Printf("grpc client config: %v", c)
+	fmt.Printf("grpc client config: %v\n", c)
 	if c.Insecure {
 		opts = append(opts, grpc.WithInsecure())
 	} else {
@@ -52,8 +52,10 @@ func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, 
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
-	return register.NewRegistrationClient(conn), nil
+	//defer conn.Close()
+	client := register.NewRegistrationClient(conn)
+
+	return client, nil
 }
 
 // newTLS sets up a new TLS profile
