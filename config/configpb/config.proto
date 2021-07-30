@@ -1,0 +1,45 @@
+/*
+Copyright 2020 Wim Henderickx.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+	http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+syntax = "proto3";
+
+package config;
+option go_package = "github.com/netw-device-driver/ndd-grpc/config/configpb";
+
+service Configuration {
+    rpc Create   (ConfigurationRequest)     returns (ConfigurationReply) {}
+    rpc Get      (ResourceName)             returns (ConfigurationStatus) {}
+    rpc Update   (ConfigurationRequest)     returns (ConfigurationReply) {}
+    rpc Delete   (ResourceName)             returns (ConfigurationReply) {}
+  }
+
+message ConfigurationRequest {
+    string          resourceName           = 1;
+    int32           Level                  = 2;
+    string          Ekv                    = 3;
+    repeated bytes  Data                   = 4;
+    }
+
+message ResourceName {
+    string resourceName = 1;
+}
+
+message ConfigurationReply {
+}
+
+message ConfigurationStatus {
+    string          Status                 = 1;
+    repeated bytes  Data                   = 4;
+}

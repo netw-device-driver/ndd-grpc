@@ -18,10 +18,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RegistrationClient interface {
-	Create(ctx context.Context, in *RegistrationInfo, opts ...grpc.CallOption) (*DeviceType, error)
-	Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationInfo, error)
-	Update(ctx context.Context, in *RegistrationInfo, opts ...grpc.CallOption) (*DeviceType, error)
-	Delete(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*DeviceType, error)
+	Create(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error)
+	Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error)
+	Update(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error)
+	Delete(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationReply, error)
 }
 
 type registrationClient struct {
@@ -32,8 +32,8 @@ func NewRegistrationClient(cc grpc.ClientConnInterface) RegistrationClient {
 	return &registrationClient{cc}
 }
 
-func (c *registrationClient) Create(ctx context.Context, in *RegistrationInfo, opts ...grpc.CallOption) (*DeviceType, error) {
-	out := new(DeviceType)
+func (c *registrationClient) Create(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error) {
+	out := new(RegistrationReply)
 	err := c.cc.Invoke(ctx, "/register.Registration/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -41,8 +41,8 @@ func (c *registrationClient) Create(ctx context.Context, in *RegistrationInfo, o
 	return out, nil
 }
 
-func (c *registrationClient) Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationInfo, error) {
-	out := new(RegistrationInfo)
+func (c *registrationClient) Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error) {
+	out := new(RegistrationStatus)
 	err := c.cc.Invoke(ctx, "/register.Registration/Read", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +50,8 @@ func (c *registrationClient) Read(ctx context.Context, in *DeviceType, opts ...g
 	return out, nil
 }
 
-func (c *registrationClient) Update(ctx context.Context, in *RegistrationInfo, opts ...grpc.CallOption) (*DeviceType, error) {
-	out := new(DeviceType)
+func (c *registrationClient) Update(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error) {
+	out := new(RegistrationReply)
 	err := c.cc.Invoke(ctx, "/register.Registration/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func (c *registrationClient) Update(ctx context.Context, in *RegistrationInfo, o
 	return out, nil
 }
 
-func (c *registrationClient) Delete(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*DeviceType, error) {
-	out := new(DeviceType)
+func (c *registrationClient) Delete(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationReply, error) {
+	out := new(RegistrationReply)
 	err := c.cc.Invoke(ctx, "/register.Registration/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,10 +72,10 @@ func (c *registrationClient) Delete(ctx context.Context, in *DeviceType, opts ..
 // All implementations must embed UnimplementedRegistrationServer
 // for forward compatibility
 type RegistrationServer interface {
-	Create(context.Context, *RegistrationInfo) (*DeviceType, error)
-	Read(context.Context, *DeviceType) (*RegistrationInfo, error)
-	Update(context.Context, *RegistrationInfo) (*DeviceType, error)
-	Delete(context.Context, *DeviceType) (*DeviceType, error)
+	Create(context.Context, *RegistrationRequest) (*RegistrationReply, error)
+	Read(context.Context, *DeviceType) (*RegistrationStatus, error)
+	Update(context.Context, *RegistrationRequest) (*RegistrationReply, error)
+	Delete(context.Context, *DeviceType) (*RegistrationReply, error)
 	mustEmbedUnimplementedRegistrationServer()
 }
 
@@ -83,16 +83,16 @@ type RegistrationServer interface {
 type UnimplementedRegistrationServer struct {
 }
 
-func (UnimplementedRegistrationServer) Create(context.Context, *RegistrationInfo) (*DeviceType, error) {
+func (UnimplementedRegistrationServer) Create(context.Context, *RegistrationRequest) (*RegistrationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedRegistrationServer) Read(context.Context, *DeviceType) (*RegistrationInfo, error) {
+func (UnimplementedRegistrationServer) Read(context.Context, *DeviceType) (*RegistrationStatus, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
 }
-func (UnimplementedRegistrationServer) Update(context.Context, *RegistrationInfo) (*DeviceType, error) {
+func (UnimplementedRegistrationServer) Update(context.Context, *RegistrationRequest) (*RegistrationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedRegistrationServer) Delete(context.Context, *DeviceType) (*DeviceType, error) {
+func (UnimplementedRegistrationServer) Delete(context.Context, *DeviceType) (*RegistrationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedRegistrationServer) mustEmbedUnimplementedRegistrationServer() {}
@@ -109,7 +109,7 @@ func RegisterRegistrationServer(s grpc.ServiceRegistrar, srv RegistrationServer)
 }
 
 func _Registration_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegistrationInfo)
+	in := new(RegistrationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func _Registration_Create_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/register.Registration/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegistrationServer).Create(ctx, req.(*RegistrationInfo))
+		return srv.(RegistrationServer).Create(ctx, req.(*RegistrationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -145,7 +145,7 @@ func _Registration_Read_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Registration_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RegistrationInfo)
+	in := new(RegistrationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func _Registration_Update_Handler(srv interface{}, ctx context.Context, dec func
 		FullMethod: "/register.Registration/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegistrationServer).Update(ctx, req.(*RegistrationInfo))
+		return srv.(RegistrationServer).Update(ctx, req.(*RegistrationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
