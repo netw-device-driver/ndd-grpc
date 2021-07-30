@@ -19,25 +19,25 @@ package register;
 option go_package = "github.com/netw-device-driver/ndd-grpc/register/registerpb";
 
 service Registration {
-    rpc Create (RegistrationRequest) returns (RegistrationReply) {}
-    rpc Get    (DeviceType)          returns (RegistrationStatus) {}
-    rpc Update (RegistrationRequest) returns (RegistrationReply) {}
-    rpc Delete (DeviceType)          returns (RegistrationReply) {}
+    rpc Create (Request) returns (Reply) {}
+    rpc Get (DeviceType) returns (Status) {}
+    rpc Update (Request) returns (Reply) {}
+    rpc Delete (DeviceType) returns (Reply) {}
   }
   
-message RegistrationRequest {
-  string          deviceType             = 1;
-  string          MatchString            = 2;
-  repeated string Subscriptions          = 3;
-  repeated string ExceptionPaths         = 4;
-  repeated string ExplicitExceptionPaths = 5;
+message Request {
+  string deviceType = 1;
+  string  matchString = 2;
+  repeated string subscriptions = 3;
+  repeated string exceptionPaths = 4;
+  repeated string explicitExceptionPaths = 5;
 }
 
-message RegistrationReply {
+message Reply {
 }
 
-message RegistrationStatus {
-  string          deviceType             = 1;
+message Status {
+  string deviceType = 1;
 }
 
 message DeviceType {

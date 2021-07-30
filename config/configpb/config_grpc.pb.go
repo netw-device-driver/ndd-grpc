@@ -18,10 +18,10 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConfigurationClient interface {
-	Create(ctx context.Context, in *ConfigurationRequest, opts ...grpc.CallOption) (*ConfigurationReply, error)
-	Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*ConfigurationStatus, error)
-	Update(ctx context.Context, in *ConfigurationRequest, opts ...grpc.CallOption) (*ConfigurationReply, error)
-	Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*ConfigurationReply, error)
+	Create(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
+	Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Status, error)
+	Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
+	Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Reply, error)
 }
 
 type configurationClient struct {
@@ -32,8 +32,8 @@ func NewConfigurationClient(cc grpc.ClientConnInterface) ConfigurationClient {
 	return &configurationClient{cc}
 }
 
-func (c *configurationClient) Create(ctx context.Context, in *ConfigurationRequest, opts ...grpc.CallOption) (*ConfigurationReply, error) {
-	out := new(ConfigurationReply)
+func (c *configurationClient) Create(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Create", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -41,8 +41,8 @@ func (c *configurationClient) Create(ctx context.Context, in *ConfigurationReque
 	return out, nil
 }
 
-func (c *configurationClient) Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*ConfigurationStatus, error) {
-	out := new(ConfigurationStatus)
+func (c *configurationClient) Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Status, error) {
+	out := new(Status)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Get", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -50,8 +50,8 @@ func (c *configurationClient) Get(ctx context.Context, in *ResourceName, opts ..
 	return out, nil
 }
 
-func (c *configurationClient) Update(ctx context.Context, in *ConfigurationRequest, opts ...grpc.CallOption) (*ConfigurationReply, error) {
-	out := new(ConfigurationReply)
+func (c *configurationClient) Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Update", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -59,8 +59,8 @@ func (c *configurationClient) Update(ctx context.Context, in *ConfigurationReque
 	return out, nil
 }
 
-func (c *configurationClient) Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*ConfigurationReply, error) {
-	out := new(ConfigurationReply)
+func (c *configurationClient) Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Reply, error) {
+	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Delete", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -72,10 +72,10 @@ func (c *configurationClient) Delete(ctx context.Context, in *ResourceName, opts
 // All implementations must embed UnimplementedConfigurationServer
 // for forward compatibility
 type ConfigurationServer interface {
-	Create(context.Context, *ConfigurationRequest) (*ConfigurationReply, error)
-	Get(context.Context, *ResourceName) (*ConfigurationStatus, error)
-	Update(context.Context, *ConfigurationRequest) (*ConfigurationReply, error)
-	Delete(context.Context, *ResourceName) (*ConfigurationReply, error)
+	Create(context.Context, *Request) (*Reply, error)
+	Get(context.Context, *ResourceName) (*Status, error)
+	Update(context.Context, *Request) (*Reply, error)
+	Delete(context.Context, *ResourceName) (*Reply, error)
 	mustEmbedUnimplementedConfigurationServer()
 }
 
@@ -83,16 +83,16 @@ type ConfigurationServer interface {
 type UnimplementedConfigurationServer struct {
 }
 
-func (UnimplementedConfigurationServer) Create(context.Context, *ConfigurationRequest) (*ConfigurationReply, error) {
+func (UnimplementedConfigurationServer) Create(context.Context, *Request) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedConfigurationServer) Get(context.Context, *ResourceName) (*ConfigurationStatus, error) {
+func (UnimplementedConfigurationServer) Get(context.Context, *ResourceName) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedConfigurationServer) Update(context.Context, *ConfigurationRequest) (*ConfigurationReply, error) {
+func (UnimplementedConfigurationServer) Update(context.Context, *Request) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceName) (*ConfigurationReply, error) {
+func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceName) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedConfigurationServer) mustEmbedUnimplementedConfigurationServer() {}
@@ -109,7 +109,7 @@ func RegisterConfigurationServer(s grpc.ServiceRegistrar, srv ConfigurationServe
 }
 
 func _Configuration_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfigurationRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -121,7 +121,7 @@ func _Configuration_Create_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/config.Configuration/Create",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServer).Create(ctx, req.(*ConfigurationRequest))
+		return srv.(ConfigurationServer).Create(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -145,7 +145,7 @@ func _Configuration_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Configuration_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ConfigurationRequest)
+	in := new(Request)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func _Configuration_Update_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/config.Configuration/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServer).Update(ctx, req.(*ConfigurationRequest))
+		return srv.(ConfigurationServer).Update(ctx, req.(*Request))
 	}
 	return interceptor(ctx, in, info, handler)
 }
