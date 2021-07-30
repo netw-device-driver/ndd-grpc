@@ -19,7 +19,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RegistrationClient interface {
 	Create(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error)
-	Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error)
+	Get(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error)
 	Update(ctx context.Context, in *RegistrationRequest, opts ...grpc.CallOption) (*RegistrationReply, error)
 	Delete(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationReply, error)
 }
@@ -41,9 +41,9 @@ func (c *registrationClient) Create(ctx context.Context, in *RegistrationRequest
 	return out, nil
 }
 
-func (c *registrationClient) Read(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error) {
+func (c *registrationClient) Get(ctx context.Context, in *DeviceType, opts ...grpc.CallOption) (*RegistrationStatus, error) {
 	out := new(RegistrationStatus)
-	err := c.cc.Invoke(ctx, "/register.Registration/Read", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/register.Registration/Get", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +73,7 @@ func (c *registrationClient) Delete(ctx context.Context, in *DeviceType, opts ..
 // for forward compatibility
 type RegistrationServer interface {
 	Create(context.Context, *RegistrationRequest) (*RegistrationReply, error)
-	Read(context.Context, *DeviceType) (*RegistrationStatus, error)
+	Get(context.Context, *DeviceType) (*RegistrationStatus, error)
 	Update(context.Context, *RegistrationRequest) (*RegistrationReply, error)
 	Delete(context.Context, *DeviceType) (*RegistrationReply, error)
 	mustEmbedUnimplementedRegistrationServer()
@@ -86,8 +86,8 @@ type UnimplementedRegistrationServer struct {
 func (UnimplementedRegistrationServer) Create(context.Context, *RegistrationRequest) (*RegistrationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedRegistrationServer) Read(context.Context, *DeviceType) (*RegistrationStatus, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Read not implemented")
+func (UnimplementedRegistrationServer) Get(context.Context, *DeviceType) (*RegistrationStatus, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedRegistrationServer) Update(context.Context, *RegistrationRequest) (*RegistrationReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
@@ -126,20 +126,20 @@ func _Registration_Create_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Registration_Read_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _Registration_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeviceType)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RegistrationServer).Read(ctx, in)
+		return srv.(RegistrationServer).Get(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/register.Registration/Read",
+		FullMethod: "/register.Registration/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RegistrationServer).Read(ctx, req.(*DeviceType))
+		return srv.(RegistrationServer).Get(ctx, req.(*DeviceType))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -192,8 +192,8 @@ var Registration_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Registration_Create_Handler,
 		},
 		{
-			MethodName: "Read",
-			Handler:    _Registration_Read_Handler,
+			MethodName: "Get",
+			Handler:    _Registration_Get_Handler,
 		},
 		{
 			MethodName: "Update",
