@@ -40,8 +40,23 @@ message Reply {
 }
 
 message Status {
-    string status = 1;
-    repeated bytes data = 2;
+    enum ResourceStatus {
+      None = 0;
+      Success = 1;
+      Failed = 2;
+      DeletePending = 3;
+    }
+    bool exists = 1;
+    ResourceStatus status = 2;
+    bytes data = 3;
+    repeated Deviation deviation = 4;
+
+    
+}
+
+message Deviation {
+  Path path = 1;
+  string value = 2;
 }
 
 // Path encodes a data tree path as a series of repeated strings, with
