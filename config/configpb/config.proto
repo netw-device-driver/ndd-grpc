@@ -20,20 +20,21 @@ option go_package = "github.com/netw-device-driver/ndd-grpc/config/configpb";
 
 service Configuration {
     rpc Create (Request) returns (Reply) {}
-    rpc Get (ResourceName) returns (Status) {}
+    rpc Get (ResourceKey) returns (Status) {}
     rpc Update (Request) returns (Reply) {}
-    rpc Delete (ResourceName) returns (Reply) {}
+    rpc Delete (ResourceKey) returns (Reply) {}
   }
 
 message Request {
-    string resourceName = 1;
+    string name = 1;
     int32 level = 2;
     Path path = 3;
     repeated bytes data = 5;
     }
 
-message ResourceName {
-    string resourceName = 1;
+message ResourceKey {
+    string name = 1;
+    int32 level = 2;
 }
 
 message Reply {
@@ -50,8 +51,6 @@ message Status {
     ResourceStatus status = 2;
     bytes data = 3;
     repeated Deviation deviation = 4;
-
-    
 }
 
 message Deviation {
