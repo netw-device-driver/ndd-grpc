@@ -49,10 +49,11 @@ message Status {
       UpdatePending = 4;
       DeletePending = 5;
     }
-    ResourceStatus status = 1;
+    string name = 1;
     Path path = 2;
     bytes data = 3;
-    repeated Deviation deviation = 4;
+    ResourceStatus status = 4;
+    repeated Deviation deviation = 5;
 }
 
 message Deviation {
