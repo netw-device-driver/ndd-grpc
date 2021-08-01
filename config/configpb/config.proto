@@ -29,7 +29,7 @@ message Request {
     string name = 1;
     int32 level = 2;
     Path path = 3;
-    repeated bytes data = 5;
+    bytes data = 5;
     }
 
 message ResourceKey {
