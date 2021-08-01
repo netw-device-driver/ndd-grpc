@@ -19,9 +19,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ConfigurationClient interface {
 	Create(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
-	Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Status, error)
+	Get(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Status, error)
 	Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
-	Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Reply, error)
+	Delete(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Reply, error)
 }
 
 type configurationClient struct {
@@ -41,7 +41,7 @@ func (c *configurationClient) Create(ctx context.Context, in *Request, opts ...g
 	return out, nil
 }
 
-func (c *configurationClient) Get(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Status, error) {
+func (c *configurationClient) Get(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Status, error) {
 	out := new(Status)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Get", in, out, opts...)
 	if err != nil {
@@ -59,7 +59,7 @@ func (c *configurationClient) Update(ctx context.Context, in *Request, opts ...g
 	return out, nil
 }
 
-func (c *configurationClient) Delete(ctx context.Context, in *ResourceName, opts ...grpc.CallOption) (*Reply, error) {
+func (c *configurationClient) Delete(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Delete", in, out, opts...)
 	if err != nil {
@@ -73,9 +73,9 @@ func (c *configurationClient) Delete(ctx context.Context, in *ResourceName, opts
 // for forward compatibility
 type ConfigurationServer interface {
 	Create(context.Context, *Request) (*Reply, error)
-	Get(context.Context, *ResourceName) (*Status, error)
+	Get(context.Context, *ResourceKey) (*Status, error)
 	Update(context.Context, *Request) (*Reply, error)
-	Delete(context.Context, *ResourceName) (*Reply, error)
+	Delete(context.Context, *ResourceKey) (*Reply, error)
 	mustEmbedUnimplementedConfigurationServer()
 }
 
@@ -86,13 +86,13 @@ type UnimplementedConfigurationServer struct {
 func (UnimplementedConfigurationServer) Create(context.Context, *Request) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Create not implemented")
 }
-func (UnimplementedConfigurationServer) Get(context.Context, *ResourceName) (*Status, error) {
+func (UnimplementedConfigurationServer) Get(context.Context, *ResourceKey) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedConfigurationServer) Update(context.Context, *Request) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
-func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceName) (*Reply, error) {
+func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceKey) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedConfigurationServer) mustEmbedUnimplementedConfigurationServer() {}
@@ -127,7 +127,7 @@ func _Configuration_Create_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Configuration_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResourceName)
+	in := new(ResourceKey)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -139,7 +139,7 @@ func _Configuration_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 		FullMethod: "/config.Configuration/Get",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServer).Get(ctx, req.(*ResourceName))
+		return srv.(ConfigurationServer).Get(ctx, req.(*ResourceKey))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -163,7 +163,7 @@ func _Configuration_Update_Handler(srv interface{}, ctx context.Context, dec fun
 }
 
 func _Configuration_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ResourceName)
+	in := new(ResourceKey)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -175,7 +175,7 @@ func _Configuration_Delete_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/config.Configuration/Delete",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServer).Delete(ctx, req.(*ResourceName))
+		return srv.(ConfigurationServer).Delete(ctx, req.(*ResourceKey))
 	}
 	return interceptor(ctx, in, info, handler)
 }
