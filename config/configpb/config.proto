@@ -50,10 +50,11 @@ message Status {
       DeletePending = 5;
     }
     string name = 1;
-    Path path = 2;
-    bytes data = 3;
-    ResourceStatus status = 4;
-    repeated Deviation deviation = 5;
+    int32 level = 2;
+    Path path = 3;
+    bytes data = 4;
+    ResourceStatus status = 5;
+    repeated Deviation deviation = 6;
 }
 
 message Deviation {
