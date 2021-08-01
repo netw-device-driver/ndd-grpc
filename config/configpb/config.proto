@@ -45,7 +45,9 @@ message Status {
       None = 0;
       Success = 1;
       Failed = 2;
-      DeletePending = 3;
+      CreatePending = 3;
+      UpdatePending = 4;
+      DeletePending = 5;
     }
     ResourceStatus status = 1;
     bytes data = 2;
