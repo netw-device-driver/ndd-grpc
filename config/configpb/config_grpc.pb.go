@@ -22,6 +22,7 @@ type ConfigurationClient interface {
 	Get(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Status, error)
 	Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
 	Delete(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Reply, error)
+	GetConfig(ctx context.Context, in *ConfigRequest, opts ...grpc.CallOption) (*ConfigReply, error)
 }
 
 type configurationClient struct {
@@ -68,6 +69,15 @@ func (c *configurationClient) Delete(ctx context.Context, in *ResourceKey, opts 
 	return out, nil
 }
 
+func (c *configurationClient) GetConfig(ctx context.Context, in *ConfigRequest, opts ...grpc.CallOption) (*ConfigReply, error) {
+	out := new(ConfigReply)
+	err := c.cc.Invoke(ctx, "/config.Configuration/GetConfig", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConfigurationServer is the server API for Configuration service.
 // All implementations must embed UnimplementedConfigurationServer
 // for forward compatibility
@@ -76,6 +86,7 @@ type ConfigurationServer interface {
 	Get(context.Context, *ResourceKey) (*Status, error)
 	Update(context.Context, *Request) (*Reply, error)
 	Delete(context.Context, *ResourceKey) (*Reply, error)
+	GetConfig(context.Context, *ConfigRequest) (*ConfigReply, error)
 	mustEmbedUnimplementedConfigurationServer()
 }
 
@@ -94,6 +105,9 @@ func (UnimplementedConfigurationServer) Update(context.Context, *Request) (*Repl
 }
 func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceKey) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Delete not implemented")
+}
+func (UnimplementedConfigurationServer) GetConfig(context.Context, *ConfigRequest) (*ConfigReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetConfig not implemented")
 }
 func (UnimplementedConfigurationServer) mustEmbedUnimplementedConfigurationServer() {}
 
@@ -180,6 +194,24 @@ func _Configuration_Delete_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Configuration_GetConfig_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConfigRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigurationServer).GetConfig(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/config.Configuration/GetConfig",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigurationServer).GetConfig(ctx, req.(*ConfigRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Configuration_ServiceDesc is the grpc.ServiceDesc for Configuration service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -202,6 +234,10 @@ var Configuration_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Delete",
 			Handler:    _Configuration_Delete_Handler,
+		},
+		{
+			MethodName: "GetConfig",
+			Handler:    _Configuration_GetConfig_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

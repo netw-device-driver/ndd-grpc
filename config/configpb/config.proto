@@ -23,39 +23,47 @@ service Configuration {
     rpc Get (ResourceKey) returns (Status) {}
     rpc Update (Request) returns (Reply) {}
     rpc Delete (ResourceKey) returns (Reply) {}
+    rpc GetConfig (ConfigRequest) returns (ConfigReply) {}
   }
 
+message ConfigRequest {
+}
+
+message ConfigReply {
+  bytes data = 1;
+}
+
 message Request {
-    string name = 1;
-    int32 level = 2;
-    Path path = 3;
-    bytes data = 5;
-    }
+  string name = 1;
+  int32 level = 2;
+  Path path = 3;
+  bytes data = 5;
+  }
 
 message ResourceKey {
-    string name = 1;
-    int32 level = 2;
+  string name = 1;
+  int32 level = 2;
 }
 
 message Reply {
 }
 
 message Status {
-    enum ResourceStatus {
-      None = 0;
-      Success = 1;
-      Failed = 2;
-      CreatePending = 3;
-      UpdatePending = 4;
-      DeletePending = 5;
-    }
-    string name = 1;
-    int32 level = 2;
-    Path path = 3;
-    bytes data = 4;
-    ResourceStatus status = 5;
-    repeated Deviation deviation = 6;
-    bool exists = 7;
+  enum ResourceStatus {
+    None = 0;
+    Success = 1;
+    Failed = 2;
+    CreatePending = 3;
+    UpdatePending = 4;
+    DeletePending = 5;
+  }
+  string name = 1;
+  int32 level = 2;
+  Path path = 3;
+  bytes data = 4;
+  ResourceStatus status = 5;
+  repeated Deviation deviation = 6;
+  bool exists = 7;
 }
 
 message Deviation {
@@ -68,15 +76,15 @@ message Deviation {
 // associated attributes.
 // Reference: gNMI Specification Section 2.2.2.
 message Path {
-    repeated PathElem elem = 3;         // Elements of the path.
+  repeated PathElem elem = 3;         // Elements of the path.
 }
 
 // PathElem encodes an element of a path, along with any attributes (keys)
 // that may be associated with it.
 message PathElem {
-    string name = 1;                    // The name of the element in the path.
-    map<string, string> key = 2;        // Map of key (attribute) name to value.
-    Attribute attribute = 3;
+  string name = 1;                    // The name of the element in the path.
+  map<string, string> key = 2;        // Map of key (attribute) name to value.
+  Attribute attribute = 3;
 }
 
 // Attaribute is used for code generation
