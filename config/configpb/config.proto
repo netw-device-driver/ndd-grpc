@@ -55,6 +55,7 @@ message Status {
     bytes data = 4;
     ResourceStatus status = 5;
     repeated Deviation deviation = 6;
+    bool exists = 7;
 }
 
 message Deviation {
