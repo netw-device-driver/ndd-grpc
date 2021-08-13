@@ -23,6 +23,7 @@ type ConfigurationClient interface {
 	Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
 	Delete(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Reply, error)
 	GetConfig(ctx context.Context, in *ConfigRequest, opts ...grpc.CallOption) (*ConfigReply, error)
+	GetResourceName(ctx context.Context, in *ResourceRequest, opts ...grpc.CallOption) (*ResourceReply, error)
 }
 
 type configurationClient struct {
@@ -78,6 +79,15 @@ func (c *configurationClient) GetConfig(ctx context.Context, in *ConfigRequest, 
 	return out, nil
 }
 
+func (c *configurationClient) GetResourceName(ctx context.Context, in *ResourceRequest, opts ...grpc.CallOption) (*ResourceReply, error) {
+	out := new(ResourceReply)
+	err := c.cc.Invoke(ctx, "/config.Configuration/GetResourceName", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ConfigurationServer is the server API for Configuration service.
 // All implementations must embed UnimplementedConfigurationServer
 // for forward compatibility
@@ -87,6 +97,7 @@ type ConfigurationServer interface {
 	Update(context.Context, *Request) (*Reply, error)
 	Delete(context.Context, *ResourceKey) (*Reply, error)
 	GetConfig(context.Context, *ConfigRequest) (*ConfigReply, error)
+	GetResourceName(context.Context, *ResourceRequest) (*ResourceReply, error)
 	mustEmbedUnimplementedConfigurationServer()
 }
 
@@ -108,6 +119,9 @@ func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceKey) (*
 }
 func (UnimplementedConfigurationServer) GetConfig(context.Context, *ConfigRequest) (*ConfigReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetConfig not implemented")
+}
+func (UnimplementedConfigurationServer) GetResourceName(context.Context, *ResourceRequest) (*ResourceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResourceName not implemented")
 }
 func (UnimplementedConfigurationServer) mustEmbedUnimplementedConfigurationServer() {}
 
@@ -212,6 +226,24 @@ func _Configuration_GetConfig_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Configuration_GetResourceName_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ConfigurationServer).GetResourceName(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/config.Configuration/GetResourceName",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ConfigurationServer).GetResourceName(ctx, req.(*ResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Configuration_ServiceDesc is the grpc.ServiceDesc for Configuration service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -238,6 +270,10 @@ var Configuration_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetConfig",
 			Handler:    _Configuration_GetConfig_Handler,
+		},
+		{
+			MethodName: "GetResourceName",
+			Handler:    _Configuration_GetResourceName_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -24,7 +24,16 @@ service Configuration {
     rpc Update (Request) returns (Reply) {}
     rpc Delete (ResourceKey) returns (Reply) {}
     rpc GetConfig (ConfigRequest) returns (ConfigReply) {}
+    rpc GetResourceName (ResourceRequest) returns (ResourceReply) {}
   }
+
+message ResourceRequest {
+  Path path = 1;
+}
+
+message ResourceReply {
+  string name = 1;
+}
 
 message ConfigRequest {
 }
