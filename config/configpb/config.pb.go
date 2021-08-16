@@ -645,7 +645,7 @@ type PathElem struct {
 	unknownFields protoimpl.UnknownFields
 
 	Name string            `protobuf:"bytes,1,opt,name=Name,proto3" json:"Name,omitempty"`                                                                                       // The name of the element in the path.
-	Key  map[string]string `protobuf:"bytes,2,rep,name=Key,proto3" json:"Key,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"` // Map of key (attribute) name to value.
+	Key  map[string]string `protobuf:"bytes,2,rep,name=Key,proto3" json:"Key,omitempty" protobuf_key:"bytes,1,opt,name=Key,proto3" protobuf_val:"bytes,2,opt,name=Value,proto3"` // Map of key (attribute) name to value.
 }
 
 func (x *PathElem) Reset() {
