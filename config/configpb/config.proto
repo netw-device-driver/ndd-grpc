@@ -76,8 +76,13 @@ message Status {
 }
 
 message Deviation {
+  enum Action {
+    Delete = 0;
+    Update = 1;
+  }
   Path path = 1;
   string value = 2;
+  Action action = 3;
 }
 
 // Path encodes a data tree path as a series of repeated strings, with
