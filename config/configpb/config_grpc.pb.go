@@ -20,7 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ConfigurationClient interface {
 	Create(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
 	Get(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Status, error)
-	Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error)
+	Update(ctx context.Context, in *Notification, opts ...grpc.CallOption) (*Reply, error)
 	Delete(ctx context.Context, in *ResourceKey, opts ...grpc.CallOption) (*Reply, error)
 	GetConfig(ctx context.Context, in *ConfigRequest, opts ...grpc.CallOption) (*ConfigReply, error)
 	GetResourceName(ctx context.Context, in *ResourceRequest, opts ...grpc.CallOption) (*ResourceReply, error)
@@ -52,7 +52,7 @@ func (c *configurationClient) Get(ctx context.Context, in *ResourceKey, opts ...
 	return out, nil
 }
 
-func (c *configurationClient) Update(ctx context.Context, in *Request, opts ...grpc.CallOption) (*Reply, error) {
+func (c *configurationClient) Update(ctx context.Context, in *Notification, opts ...grpc.CallOption) (*Reply, error) {
 	out := new(Reply)
 	err := c.cc.Invoke(ctx, "/config.Configuration/Update", in, out, opts...)
 	if err != nil {
@@ -94,7 +94,7 @@ func (c *configurationClient) GetResourceName(ctx context.Context, in *ResourceR
 type ConfigurationServer interface {
 	Create(context.Context, *Request) (*Reply, error)
 	Get(context.Context, *ResourceKey) (*Status, error)
-	Update(context.Context, *Request) (*Reply, error)
+	Update(context.Context, *Notification) (*Reply, error)
 	Delete(context.Context, *ResourceKey) (*Reply, error)
 	GetConfig(context.Context, *ConfigRequest) (*ConfigReply, error)
 	GetResourceName(context.Context, *ResourceRequest) (*ResourceReply, error)
@@ -111,7 +111,7 @@ func (UnimplementedConfigurationServer) Create(context.Context, *Request) (*Repl
 func (UnimplementedConfigurationServer) Get(context.Context, *ResourceKey) (*Status, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
-func (UnimplementedConfigurationServer) Update(context.Context, *Request) (*Reply, error) {
+func (UnimplementedConfigurationServer) Update(context.Context, *Notification) (*Reply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Update not implemented")
 }
 func (UnimplementedConfigurationServer) Delete(context.Context, *ResourceKey) (*Reply, error) {
@@ -173,7 +173,7 @@ func _Configuration_Get_Handler(srv interface{}, ctx context.Context, dec func(i
 }
 
 func _Configuration_Update_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Request)
+	in := new(Notification)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -185,7 +185,7 @@ func _Configuration_Update_Handler(srv interface{}, ctx context.Context, dec fun
 		FullMethod: "/config.Configuration/Update",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ConfigurationServer).Update(ctx, req.(*Request))
+		return srv.(ConfigurationServer).Update(ctx, req.(*Notification))
 	}
 	return interceptor(ctx, in, info, handler)
 }
