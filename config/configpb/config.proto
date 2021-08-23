@@ -31,7 +31,7 @@ service Configuration {
 
 message ResourceRequest {
   int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
-  Path rootPath = 2; // RootPath of the resource
+  Path path = 2; // path of the resource
 }
 
 message ResourceReply {
@@ -52,7 +52,7 @@ message Request {
   int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
   string name = 2; // resourcename
   int32 level = 3; // level of the path
-  Path rootPath = 4; // RootPath of the resource
+  Path path = 4; // path of the resource
   bytes data = 5; // full data object of the resource
   repeated Update update = 6; // Fine granular updates of the resource.
   }
@@ -123,7 +123,7 @@ message ResourceKey {
   int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
   string name = 2;
   int32 level = 3;
-  Path rootPath = 4; //used only in Get to find the data in the cache when a MR is created but the resource already exists
+  Path path = 4; //used only in Get to find the data in the cache when a MR is created but the resource already exists
 }
 
 message Reply {
@@ -142,7 +142,7 @@ message Status {
   int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
   string name = 2;
   int32 level = 3;
-  Path rootPath = 4;
+  Path path = 4;
   bytes data = 5;
   ResourceStatus status = 6;
   repeated Deviation deviation = 7;
