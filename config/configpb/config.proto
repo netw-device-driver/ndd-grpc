@@ -120,9 +120,10 @@ message ScalarArray {
 }
 
 message ResourceKey {
-  string name = 1;
-  int32 level = 2;
-  Path path = 3; //used only in Get to find the data in the cache when a MR is created but the resource already exists
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  string name = 2;
+  int32 level = 3;
+  Path rootPath = 4; //used only in Get to find the data in the cache when a MR is created but the resource already exists
 }
 
 message Reply {
