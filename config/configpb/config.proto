@@ -144,9 +144,10 @@ message Status {
   int32 level = 3;
   Path path = 4;
   bytes data = 5;
-  ResourceStatus status = 6;
-  repeated Deviation deviation = 7;
-  bool exists = 8;
+  repeated Update update = 6; // Fine granular updates of the resource.
+  ResourceStatus status = 7;
+  repeated Deviation deviation = 8;
+  bool exists = 9;
 }
 
 message Deviation {
