@@ -30,25 +30,31 @@ service Configuration {
   }
 
 message ResourceRequest {
-  Path path = 1;
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  Path rootPath = 2; // RootPath of the resource
 }
 
 message ResourceReply {
-  string name = 1;
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  string name = 2; // resourcename
 }
 
 message ConfigRequest {
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
 }
 
 message ConfigReply {
-  bytes data = 1;
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  bytes data = 2;
 }
 
 message Request {
-  string name = 1;
-  int32 level = 2;
-  Path path = 3;
-  bytes data = 5;
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  string name = 2; // resourcename
+  int32 level = 3; // level of the path
+  Path rootPath = 4; // RootPath of the resource
+  bytes data = 5; // full data object of the resource
+  repeated Update update = 6; // Fine granular updates of the resource.
   }
 
 message Notification {
@@ -120,6 +126,7 @@ message ResourceKey {
 }
 
 message Reply {
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
 }
 
 message Status {
@@ -131,13 +138,14 @@ message Status {
     UpdatePending = 4;
     DeletePending = 5;
   }
-  string name = 1;
-  int32 level = 2;
-  Path path = 3;
-  bytes data = 4;
-  ResourceStatus status = 5;
-  repeated Deviation deviation = 6;
-  bool exists = 7;
+  int64 timestamp = 1; // Timestamp in nanoseconds since Epoch.
+  string name = 2;
+  int32 level = 3;
+  Path rootPath = 4;
+  bytes data = 5;
+  ResourceStatus status = 6;
+  repeated Deviation deviation = 7;
+  bool exists = 8;
 }
 
 message Deviation {
