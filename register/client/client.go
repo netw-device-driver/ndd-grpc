@@ -36,15 +36,15 @@ const (
 func NewClient(ctx context.Context, c ndd.Config) (register.RegistrationClient, error) {
 	var opts []grpc.DialOption
 	fmt.Printf("grpc client config: %v\n", c)
-	if c.Insecure {
-		opts = append(opts, grpc.WithInsecure())
-	} else {
-		tlsConfig, err := newTLS(c)
-		if err != nil {
-			return nil, err
-		}
-		opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
+	//if c.Insecure {
+	//	opts = append(opts, grpc.WithInsecure())
+	//} else {
+	tlsConfig, err := newTLS(c)
+	if err != nil {
+		return nil, err
 	}
+	opts = append(opts, grpc.WithTransportCredentials(credentials.NewTLS(tlsConfig)))
+	//}
 	timeoutCtx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 
